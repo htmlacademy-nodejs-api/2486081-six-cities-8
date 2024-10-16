@@ -1,0 +1,79 @@
+{
+  "api": {
+    "title": [
+      "Penthouse, 4-5 rooms + 5 balconies",
+      "House in countryside",
+      "Nice, cozy, warm big bed apartment",
+      "Wood and stone place",
+      "The house among olive "
+    ],
+    "description": [
+      "A new spacious villa, one floor. All commodities, jacuzzi and beautiful scenery. Ideal for families or friends.",
+      "I rent out a very sunny and bright apartment only 7 minutes walking distance to the metro station. The apartment has a spacious living room with a kitchen, one bedroom and a bathroom with mit bath. A terrace can be used in summer.",
+      "Peaceful studio in the most wanted area in town. Quiet house Near of everything. Completely renovated. Lovely neighbourhood, lot of trendy shops, restaurants and bars in a walking distance.",
+      "Design interior in most sympathetic area! Complitely renovated, well-equipped, cosy studio in idyllic, over 100 years old wooden house. Calm street, fast connection to center and airport."
+    ],
+    "city": [
+      "Paris",
+      "Moscow",
+      "Kazan",
+      "St. Petersburg",
+      "Sochi"
+    ],
+    "previewImage": [
+      "previewImage1.jpg",
+      "previewImage11.jpg",
+      "previewImage13.jpg",
+      "previewImage151.jpg",
+      "previewImage31.jpg"
+    ],
+    "images": [
+      "images-photo-1.jpg",
+      "images-photo-2.jpg",
+      "images-photo-3.jpg",
+      "images-photo-4.jpg",
+      "images-photo-5.jpg"
+    ],
+    "type": [
+      "room",
+      "apartment",
+      "hotel"
+    ],
+    "goods": [
+      "Kitchen",
+      "Fridge",
+      "Coffee machine",
+      "Cable TV",
+      "Heating",
+      "Air conditioning"
+    ],
+    "name": [
+      "Dima",
+      "Anna",
+      "Jon",
+      "Tom"
+    ],
+    "email": [
+      "luddetoissecroi-2380@yopmail.com",
+      "froillifrefauze-4351@yopmail.com",
+      "leidafeweke-6762@yopmail.com"
+    ],
+    "avatarUser": [
+      "images-avatarUser-1.jpg",
+      "images-avatarUser-2.jpg",
+      "images-avatarUser-3.jpg",
+      "images-avatarUser-4.jpg",
+      "images-avatarUser-5.jpg"
+    ],
+    "password": [
+      "123dad",
+      "secret0000",
+      "12345i9",
+      "000pin"
+    ],
+    "typeUser": [
+      "Pro",
+      "Usual"
+    ]
+  }
+}
