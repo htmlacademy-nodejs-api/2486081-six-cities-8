@@ -1,1 +1,1 @@
-export {getRandomElement, getRandomNumber, getRandomItems} from './functions.js';
+export { getRandomElement, getRandomNumber, getRandomItems } from './functions.js';
