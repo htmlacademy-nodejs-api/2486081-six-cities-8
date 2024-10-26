@@ -13,3 +13,7 @@ export enum Price {
   Mix = 3500
 }
 
+export enum Retry {
+  Count = 5,
+  Timeout = 1000
+}

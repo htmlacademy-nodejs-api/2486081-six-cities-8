@@ -6,7 +6,7 @@ export enum TypeUser {
 export type User = {
   name: string;
   email: string;
-  avatarUser?: string;
+  avatarUser: string;
   password: string;
   typeUser: TypeUser;
 }
