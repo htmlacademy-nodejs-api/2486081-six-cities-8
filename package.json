@@ -9,14 +9,13 @@
   ],
   "main": "main.js",
   "scripts": {
-    "start:dev": "npm run ts ./src/main.rest.js | pino-pretty --colorize --translateTime SYS:standard",
+    "start:dev": "nodemon",
     "build": "npm run clean && npm run compile",
     "lint": "eslint src/ --ext .ts",
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "ts": "tsc --noEmit && node --no-warnings=--no-warnings=ExperimentalWarning --loader ts-node/esm",
-    "mock:server": "json-server ./mocks/mock-server-data.json --port 3123 --host localhost",
-    "ts:import": "npm run ts ./src/main.cli.ts -- --import ./mocks/mock-data.tsv Roman 123qwe localhost sex-cities salt"
+    "mock:server": "json-server ./mocks/mock-server-data.json --port 3123 --host localhost"
   },
   "devDependencies": {
     "@types/convict": "6.1.6",
@@ -27,6 +26,7 @@
     "eslint": "8.49.0",
     "eslint-config-htmlacademy": "9.1.1",
     "json-server": "1.0.0-beta.3",
+    "nodemon": "3.1.7",
     "pino-pretty": "11.3.0",
     "rimraf": "5.0.1",
     "ts-node": "10.9.2",
