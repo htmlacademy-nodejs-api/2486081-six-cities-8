@@ -1,6 +1,7 @@
 import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@typegoose/typegoose';
 import { Goods, Images } from '../../types/offer-type.js';
-import { UserEntity } from '../user/user.entity.js';
+import { UserEntity } from '../user/index.js';
+import { Severity } from '@typegoose/typegoose';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface OfferEntity extends defaultClasses.Base {}
@@ -9,7 +10,10 @@ export interface OfferEntity extends defaultClasses.Base {}
   schemaOptions: {
     collection: 'Offer',
     timestamps: true,
-  }
+  },
+  options: {
+    allowMixed: Severity.ALLOW,
+  },
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -30,7 +34,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public previewImage: string;
 
   @prop({required: true})
-  public images: Images;
+  public images: Images[];
 
   @prop({required: true})
   public isFavorite: boolean;
@@ -54,7 +58,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public price: number;
 
   @prop({required: true})
-  public goods: Goods;
+  public goods: Goods[];
 
   @prop({
     ref: UserEntity,
