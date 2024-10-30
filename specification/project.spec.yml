@@ -1,0 +1,408 @@
+openapi: 3.1.0
+info:
+  title: API-сервер для пет-проекта «6 городов».
+  description: |-
+    * Список ресурсов и маршрутов сервера «6 городов».
+  lecense:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 2.0.0
+
+
+tags:
+  - name: Offers
+    description: Действия с предложениями.
+  - name: Favorite
+    description: Действия с избранными предложениями.
+  - name: Premium
+    description: Действия с премиальными предложениями.
+  - name: Comments
+    description: Действия с комментариями.
+  - name: Users
+    description: Действия с пользователем.
+
+
+paths:
+  /offers/offer:
+    post:
+      tags:
+        - Offers
+      summary: Добавить новое предложение по аренде.
+      description: Добавляет новое предложение по аренде.
+
+      requestBody:
+        description: Информация для создания нового предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schema/createOffer'
+        required: true
+
+      response:
+        "201":
+          description: Предложение добавлено. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/offer'
+
+        "409":
+          description: Не удалось создать предложение.
+
+    get:
+      tags:
+       - Offers
+      summary: Получить список предложений по аренде.
+      description: Возвращает не более 60 предложений по аренде.
+
+      response:
+        "200":
+          description: Список предложений по аренде.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schema/previewOffer'
+
+  /offers/offer/{offerId}:
+    get:
+      tags:
+       - Offers
+      summary: Получить подробное предложение по аренде.
+      description: Возвращает подробное предложение по аренде.
+
+      response:
+        description: Подробное предложение по аренде.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schema/offer'
+
+
+    put:
+      tags:
+        - Offers
+      summary: Редактировать предложение по аренде.
+      description: Редактирует предложение по аренде.
+
+    delete:
+      tags:
+        - Offers
+      summary: Удалить предложение по аренде.
+      description: Удаляет предложение по аренде.
+
+  /offers/favorite:
+    get:
+      tags:
+        - Favorite
+      summary: Получить список избранных предложений.
+      description: Возвращается список избранных предложений.
+
+      response:
+        "200":
+          description: Список избранных предложений по аренде.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schema/previewOffer'
+
+  /favorite/{offerId}/{status}:
+    post:
+      tags:
+        - Favorite
+      summary: Изменяет статус избранного предложения.
+      description: Статус избранного предложения. Может быть 1 или 0, где 1 добавляет предложение в избранное, а 0 удаляет.
+
+  /offers/premium:
+    get:
+      tags:
+        - Premium
+      summary: Получить список премиальных предложений.
+      description: Возвращает не более 3 предложений с флагом «Premium».
+
+      response:
+        "200":
+          description: Список премиальных предложений по аренде.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schema/previewOffer'
+
+
+  /comments/{offerId}:
+    get:
+      tags:
+        - Comments
+      summary: Получить список комментариев к предложению.
+      description: Возвращает список из 50 (или меньше) последних комментариев.
+
+    post:
+      tags:
+        - Comments
+      summary: Добавить комментарий к предложению.
+      description: Добавляет новый комментарий.
+
+  /users/register:
+    post:
+      tags:
+        - Users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schema/createUser'
+        required: true
+
+      response:
+        "201":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/users'
+
+        "409":
+          description: Пользователь с таким email уже существует.
+
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: Аутентификация пользователя.
+      description: Авторизует пользователя и позволяет войти в закрытую часть приложения.
+
+      requestBody:
+        description: Аутентификация пользователя.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: Oliver.conner@gmail.com
+
+                password:
+                  type: string
+                  example: 123qwe
+        required: true
+
+      response:
+        "200":
+          description: Пользователь  авторизован.
+          content:
+          application/json:
+            schema:
+              $ref: '#/components/schema/users'
+
+        "401":
+          description: Неверный логин или пароль.
+
+
+    get:
+      tags:
+        - Users
+      summary: Проверка статуса пользователя.
+      description: Определяет статус пользователя.
+
+      response:
+        "200":
+          description: Статус авторизации.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schema/users'
+
+        "400":
+          description: Ошибка авторизации.
+
+
+  /users/logout:
+    delete:
+      tags:
+        - Users
+      summary: Завершение сеанса работы.
+      description: Выходит из закрытой части приложения.
+
+      response:
+        "204":
+          description: Сеанс завершен.
+
+components:
+  schema:
+    createOffer:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: Beautiful & luxurious studio at great location
+        type:
+          type: string
+          example: apartment
+        price:
+          type: number
+          example: 560
+        city:
+          type: string
+          example: Paris
+        isFavorite:
+          type: boolean
+          example: false
+        isPremium:
+          type: boolean
+          example: false
+        rating:
+          type: number
+          example: 4
+        previewImage:
+          type: string
+          example: "https://url-to-image/image.png"
+        description:
+          type: string
+          example: A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam
+        bedrooms:
+          type: number
+          example: 3
+        goods:
+          type: [string]
+          example: ["Heating"]
+        images:
+          type: [string]
+          example: ["https://url-to-image/image.png"]
+        maxAdults:
+          type: number
+          example: 2
+
+    offer:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: Beautiful & luxurious studio at great location
+        type:
+          type: string
+          example: apartment
+        price:
+          type: number
+          example: 560
+        city:
+          type: string
+          example: Paris
+        isFavorite:
+          type: boolean
+          example: false
+        isPremium:
+          type: boolean
+          example: false
+        rating:
+          type: number
+          example: 4
+        previewImage:
+          type: string
+          example: "https://url-to-image/image.png"
+        description:
+          type: string
+          example: A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam
+        bedrooms:
+          type: number
+          example: 3
+        goods:
+          type: [string]
+          example: ["Heating"]
+        images:
+          type: [string]
+          example: ["https://url-to-image/image.png"]
+        maxAdults:
+          type: number
+          example: 2
+        host:
+          properties:
+            name:
+              type: string
+              example: Oliver Conner
+            avatarUrl:
+              type: string
+              example: https://url-to-image/image.png
+            isPro:
+              type: boolean
+              example: false
+
+    previewOffer:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: Beautiful & luxurious studio at great location
+        type:
+          type: string
+          example: apartment
+        price:
+          type: number
+          example: 560
+        city:
+          type: string
+          example: Paris
+        isFavorite:
+          type: boolean
+          example: true
+        isPremium:
+          type: boolean
+          example: true
+        rating:
+          type: number
+          example: 4
+        previewImage:
+          type: string
+          example: "https://url-to-image/image.png"
+
+    createUser:
+      type: object
+
+      properties:
+        name:
+          type: string
+          example: Roman
+
+        avatarUrl:
+          type: string
+          example: https://url-to-image/image.png
+
+        email:
+          type: string
+          example: login@gmail.com
+
+        password:
+          type: string
+          example: 123qwe
+
+    users:
+      type: object
+
+      properties:
+        name:
+          type: string
+          example: Oliver Conner
+
+        avatarUrl:
+          type: string
+          example: https://url-to-image/image.png
+
+        isPro:
+          type: boolean
+          example: false
+
+        email:
+        type: string
+        example: Oliver.conner@gmail.com
+
+        token:
+          type: string
+          example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+
+
