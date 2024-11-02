@@ -1,6 +1,5 @@
-import { Expose } from 'class-transformer';
-import { Goods, Images } from '../../../types/offer-type.js';
-import { User } from '../../../types/user-type.js';
+import { Expose, Type } from 'class-transformer';
+import { UserRdo } from '../../user/index.js';
 
 export class DetailedOfferRdo {
   @Expose()
@@ -19,7 +18,7 @@ export class DetailedOfferRdo {
   public previewImage: string;
 
   @Expose()
-  public images: Images[];
+  public images: string[];
 
   @Expose()
   public isFavorite: boolean;
@@ -43,10 +42,11 @@ export class DetailedOfferRdo {
   public price: number;
 
   @Expose()
-  public goods: Goods[];
+  public goods: string[];
 
   @Expose()
-  public host: User;
+  @Type(() => UserRdo)
+  public host: UserRdo;
 
   /*@Expose()
   public comment: number;*/

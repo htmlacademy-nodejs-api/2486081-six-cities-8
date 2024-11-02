@@ -4,4 +4,3 @@ export { CommentEntity } from './comment.entity.js';
 export { DefaultCommentService } from './default-comment.service.js';
 export { CreateCommentDto } from './dto/create-comment.dto.js';
 
-

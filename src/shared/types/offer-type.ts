@@ -3,9 +3,23 @@ import { User } from './user-type.js';
 export type Images = {
   img: string;
 }
-export type Goods = {
-  good: string;
+export enum Goods {
+  Breakfast = 'Breakfast',
+  AirConditioning = 'Air conditioning',
+  LaptopFriendlyWorkspace = 'Laptop friendly workspace',
+  BabySeat = 'Baby seat',
+  Washer = 'Washer',
+  Towels = 'Towels',
+  Fridge = 'Fridge'
 }
+
+export enum TypeOffer {
+  Apartment = 'apartment',
+  House = 'house',
+  Room = 'room',
+  Hotel = 'hotel'
+}
+
 
 export type Offer = {
   title: string;
@@ -13,14 +27,14 @@ export type Offer = {
   postDate: Date;
   city: string;
   previewImage: string;
-  images: Images[];
+  images: string[];
   isFavorite: boolean;
   isPremium: boolean;
   rating: number;
-  type: string;
+  type: TypeOffer;
   bedrooms: number;
   maxAdults: number;
   price: number;
-  goods: Goods[];
+  goods: string[] | Goods[];
   host: User;
 }

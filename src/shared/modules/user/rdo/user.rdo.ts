@@ -10,6 +10,6 @@ export class UserRdo {
   @Expose()
   public avatarUser: string;
 
-  // @Expose()
-  // public typeUser: string;
+  @Expose()
+  public isPro: boolean;
 }

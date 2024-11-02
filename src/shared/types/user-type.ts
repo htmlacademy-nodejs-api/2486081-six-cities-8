@@ -8,5 +8,5 @@ export type User = {
   email: string;
   avatarUser: string;
   password: string;
-  typeUser: TypeUser;
+  isPro: boolean;
 }

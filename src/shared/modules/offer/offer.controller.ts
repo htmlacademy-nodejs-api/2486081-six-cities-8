@@ -1,60 +1,129 @@
 import { inject, injectable } from 'inversify';
-import { BaseController, HttpMethod } from '../../libs/rest/index.js';
+import { BaseController, HttpError, HttpMethod } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Request, Response } from 'express';
 import { fillDTO } from '../../helpers/index.js';
-import { CreareOfferRequest, DetailedOfferRdo, OfferRdo, OfferService, } from './index.js';
+import { CreareOfferRequest, CreateOfferDto, DetailedOfferRdo, OfferRdo, OfferService, UpdateOfferDto, } from './index.js';
+import { ParamOfferCity, ParamOfferId, RequestQuery } from './types.js';
+import { CommentService } from '../comment/comment-servise.interface.js';
+import { CommentRdo } from '../comment/rdo/comment.rdo.js';
+import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
+import { ValidateDtoMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
+import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
+import { StatusCodes } from 'http-status-codes';
+
 
 @injectable()
 export class OfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
-    @inject(Component.OfferService) private readonly offerService: OfferService
+    @inject(Component.OfferService) private readonly offerService: OfferService,
+    @inject(Component.CommentService) private readonly commentService: CommentService
   ) {
     super(logger);
 
     this.logger.info('Register routes for OfferController');
 
-    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.findListOffers });
-    this.addRoute({ path: '/offer', method: HttpMethod.Get, handler: this.findOffer });
-    this.addRoute({ path: '/premium', method: HttpMethod.Get, handler: this.premium });
-    this.addRoute({ path: '/favorite', method: HttpMethod.Get, handler: this.favorite });
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.createOffer });
-    this.addRoute({ path: '/', method: HttpMethod.Delete, handler: this.deleteOffer });
-    this.addRoute({ path: '/', method: HttpMethod.Put, handler: this.updateOffer });
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [ new ValidateDtoMiddleware(CreateOfferDto)]
+    });
+    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
+    this.addRoute({ path: '/:city/offer', method: HttpMethod.Get, handler: this.premium });
+    this.addRoute({ path: '/favorite/offers', method: HttpMethod.Get, handler: this.favorite });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.show,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Put,
+      handler: this.update,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(UpdateOfferDto),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
+    });
+    this.addRoute({
+      path: '/:offerId/comments',
+      method: HttpMethod.Get,
+      handler: this.indexComment,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
+    });
   }
 
-  public async findListOffers(_req: Request, res: Response): Promise<void> {
+  public async create({ body }: CreareOfferRequest, res: Response): Promise<void> {
+    const offer = await this.offerService.create(body);
+    this.created(res, fillDTO(OfferRdo, offer));
+  }
+
+  public async index(_req: Request, res: Response): Promise<void> {
     const offers = await this.offerService.findOffers();
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 
-  public async findOffer(_req: Request, res: Response): Promise<void> {
-    const offer = await this.offerService.findById('6720b0971e31660a634b0b59');
+  public async show({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
+    const { offerId } = params;
+    const offer = await this.offerService.findById(offerId);
     this.ok(res, fillDTO(DetailedOfferRdo, offer));
   }
 
-  public async premium(_req: Request, res: Response): Promise<void> {
-    const offer = await this.offerService.findByPremiumOffers('Paris');
-    this.ok(res, offer);
+  public async delete({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
+    const { offerId } = params;
+    const offer = await this.offerService.deleteById(offerId);
+    this.noContent(res, offer);
+  }
+
+  public async update({ body, params }: Request<ParamOfferId>, res: Response): Promise<void> {
+    const { offerId } = params;
+    const offer = await this.offerService.updateById(offerId, body);
+    this.ok(res, fillDTO(DetailedOfferRdo, offer));
+  }
+
+  public async premium({ params, query }: Request<ParamOfferCity, unknown, unknown, RequestQuery>, res: Response): Promise<void> {
+    const { city } = params;
+    const { limit } = query;
+    const offer = await this.offerService.findByPremiumOffers(city, limit);
+
+    if (offer?.length === 0) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `There is no premium offers for ${city}`,
+        'OfferController'
+      );
+    }
+    this.ok(res, fillDTO(OfferRdo, offer));
   }
 
   public async favorite(_req: Request, res: Response): Promise<void> {
     const offer = await this.offerService.findByFavoritesOffers();
-    this.ok(res, offer);
+    this.ok(res, fillDTO(OfferRdo, offer));
   }
 
-  public async createOffer({ body }: CreareOfferRequest, res: Response): Promise<void> {
-    const offer = await this.offerService.create(body);
-    this.created(res, offer);
-  }
-
-  public async deleteOffer(_req: Request, _res: Response): Promise<void> {
-    //
-  }
-
-  public async updateOffer(_req: Request, _res: Response): Promise<void> {
-    //
+  public async indexComment({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
+    const { offerId } = params;
+    const comments = await this.commentService.findByOfferId(offerId);
+    this.ok(res, fillDTO(CommentRdo, comments));
   }
 }

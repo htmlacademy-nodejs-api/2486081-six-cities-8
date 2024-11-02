@@ -1,0 +1,29 @@
+# Создание нового пользователя.
+POST http://localhost:3000/users/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "Dima@index.com",
+  "name": "Dima",
+  "isPro": true,
+  "password": "super!"
+}
+###
+
+## Вход в закрытую часть приложения.
+POST http://localhost:3000/users/login HTTP/1.1
+Content-Type: application/json
+{
+  "email": "jonh_cool911@gmail.com",
+  "password": "123qwe"
+}
+###
+
+## Проверка состояния пользователя.
+GET http://localhost:3000/users/login HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3MjBiMDk3MWUzMTY2MGE2MzRiMGI1NyIsImVtYWlsIjoiam9uaF9jb29sOTExQGdtYWlsLmNvbSIsIm5hbWUiOiJKb25oIiwiaWF0IjoxNzMwNTAzOTc0LCJleHAiOjE3MzA2NzY3NzR9.AjBi092PXjRrOBuEAlq8hCptpG6iNlm5yDWRc5LTnWM
+
+###
+
+## Выход из закрытой части приложения.
+

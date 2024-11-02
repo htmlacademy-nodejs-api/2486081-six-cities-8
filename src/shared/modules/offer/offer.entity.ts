@@ -1,5 +1,5 @@
 import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@typegoose/typegoose';
-import { Goods, Images } from '../../types/offer-type.js';
+import { TypeOffer } from '../../types/offer-type.js';
 import { UserEntity } from '../user/index.js';
 import { Severity } from '@typegoose/typegoose';
 
@@ -34,7 +34,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public previewImage: string;
 
   @prop({required: true})
-  public images: Images[];
+  public images: string[];
 
   @prop({required: true})
   public isFavorite: boolean;
@@ -45,8 +45,12 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({required: true})
   public rating: number;
 
-  @prop({required: true})
-  public type: string;
+  @prop({
+    //required: true,
+    type: () => String,
+    enum: TypeOffer
+  })
+  public type: TypeOffer;
 
   @prop({required: true})
   public bedrooms: number;
@@ -58,13 +62,16 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public price: number;
 
   @prop({required: true})
-  public goods: Goods[];
+  public goods: string[];
 
   @prop({
     ref: UserEntity,
     required: true
   })
   public host: Ref<UserEntity>;
+
+  @prop({default: 0})
+  public commentCount: number;
 
 }
 
