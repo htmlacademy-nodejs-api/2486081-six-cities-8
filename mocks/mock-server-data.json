@@ -15,10 +15,11 @@
     ],
     "city": [
       "Paris",
-      "Moscow",
-      "Kazan",
-      "St. Petersburg",
-      "Sochi"
+      "Cologne",
+      "Brussels",
+      "Amsterdam",
+      "Hamburg",
+      "Dusseldorf"
     ],
     "previewImage": [
       "previewImage1.jpg",
@@ -37,7 +38,8 @@
     "type": [
       "room",
       "apartment",
-      "hotel"
+      "hotel",
+      "house"
     ],
     "goods": [
       "Kitchen",

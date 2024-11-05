@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
-import { Component } from '../../types/component.enum.js';
-import { Logger } from '../../libs/logger/logger.interface.js';
+import { Component } from '../../types/index.js';
+import { Logger } from '../../libs/logger/index.js';
 import { types } from '@typegoose/typegoose';
 import { CommentEntity, CommentService, CreateCommentDto } from './index.js';
 

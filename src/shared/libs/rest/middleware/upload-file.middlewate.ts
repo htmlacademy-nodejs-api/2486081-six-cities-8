@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Middleware } from './middleware.interface.js';
+import { Middleware } from '../index.js';
 import multer, {diskStorage} from 'multer';
 import { extension } from 'mime-types';
 

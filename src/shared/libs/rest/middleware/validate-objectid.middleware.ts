@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Middleware } from './middleware.interface.js';
+import { Middleware } from '../index.js';
 import { Types } from 'mongoose';
 
 import { StatusCodes } from 'http-status-codes';

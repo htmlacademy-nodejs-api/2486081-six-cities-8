@@ -1,4 +1,5 @@
 import { Expose } from 'class-transformer';
+import { City } from '../../../types/index.js';
 
 export class OfferRdo {
   @Expose()
@@ -12,6 +13,9 @@ export class OfferRdo {
 
   @Expose()
   public city: string;
+
+  @Expose()
+  public location: City;
 
   @Expose()
   public previewImage: string;
@@ -31,8 +35,9 @@ export class OfferRdo {
   @Expose()
   public price: number;
 
-  /*@Expose()
-   public comments: number;*/
+  @Expose()
+  public commentCount: number;
+
 }
 
 

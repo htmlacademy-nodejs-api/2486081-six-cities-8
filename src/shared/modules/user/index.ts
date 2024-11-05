@@ -7,3 +7,4 @@ export { UserController } from './user.controller.js';
 export { UserEntity, UserModel } from './user.entity.js';
 export { LoginUserDto } from './dto/login-user.dto.js';
 export { CreateUserRequest, LoginUserRequest} from './types.js';
+export { LoggedUserRdo } from './rdo/logged-use.rdo.js';

@@ -2,9 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import { Middleware } from './middleware.interface.js';
 import { createSecretKey } from 'node:crypto';
 import { jwtVerify } from 'jose';
-import { TokenPayload } from '../../../modules/auth/helpers/types.js';
+import { TokenPayload } from '../../../modules/auth/index.js';
 import { StatusCodes } from 'http-status-codes';
-import { HttpError } from '../errors/http-error.js';
+import { HttpError } from '../index.js';
 
 function isTokenPayload(payload: unknown): payload is TokenPayload {
   return (
@@ -30,14 +30,11 @@ export class ParseTokenMiddleware implements Middleware {
 
     const [, token] = authorizationHeader;
 
-    console.log(token);
 
     try {
       const { payload } = await jwtVerify(token, createSecretKey(this.jwtSecret, 'utf-8'));
-      console.log(payload);
       if(isTokenPayload(payload)) {
         req.tokenPayload = { ...payload };
-        console.log(req.tokenPayload);
         return next();
       } else {
         throw new Error('Bad token');

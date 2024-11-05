@@ -1,7 +1,8 @@
 import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@typegoose/typegoose';
-import { TypeOffer } from '../../types/offer-type.js';
 import { UserEntity } from '../user/index.js';
 import { Severity } from '@typegoose/typegoose';
+import { City, TypeOffer } from '../../types/index.js';
+
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface OfferEntity extends defaultClasses.Base {}
@@ -36,7 +37,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({required: true})
   public images: string[];
 
-  @prop({required: true})
+  @prop({required: true, default: false})
   public isFavorite: boolean;
 
   @prop({required: true})
@@ -46,7 +47,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public rating: number;
 
   @prop({
-    //required: true,
+    required: true,
     type: () => String,
     enum: TypeOffer
   })
@@ -70,8 +71,11 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public host: Ref<UserEntity>;
 
-  @prop({default: 0})
+  @prop({required: true, default: 0})
   public commentCount: number;
+
+  @prop({required: true,})
+  public location: City;
 
 }
 

@@ -1,6 +1,6 @@
 import { MinLength, MaxLength, IsDateString, IsInt, Min, Max, IsEnum, IsBoolean, IsMongoId } from 'class-validator';
 import { CreateOfferValidationMessage } from './create-offer.messages.js';
-import { TypeOffer } from '../../../types/offer-type.js';
+import { TypeOffer } from '../../../types/index.js';
 
 export class CreateOfferDto {
   @MinLength(10, { message: CreateOfferValidationMessage.title.minLength })
@@ -18,11 +18,6 @@ export class CreateOfferDto {
 
   @MaxLength(256, { message: CreateOfferValidationMessage.previewImage.maxLength })
   public previewImage: string;
-
-  public images: string[];
-
-  @IsBoolean({ message: CreateOfferValidationMessage.isFavorite.invalidFormat })
-  public isFavorite: boolean;
 
   @IsBoolean({ message: CreateOfferValidationMessage.isPremium.invalidFormat })
   public isPremium: boolean;

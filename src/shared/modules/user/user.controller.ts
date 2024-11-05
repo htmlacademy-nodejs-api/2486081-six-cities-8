@@ -1,18 +1,15 @@
 import { inject, injectable } from 'inversify';
-import { BaseController, HttpError, HttpMethod } from '../../libs/rest/index.js';
+import { BaseController, HttpError, HttpMethod, PrivateRouteMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Request, Response } from 'express';
 import { UserService, UserRdo, LoginUserRequest, CreateUserRequest, CreateUserDto, LoginUserDto} from './index.js';
 import { fillDTO } from '../../helpers/index.js';
 import { StatusCodes } from 'http-status-codes';
-import { ValidateDtoMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
-import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
-import { UploadFileMiddleware } from '../../libs/rest/middleware/upload-file.middlewate.js';
-import { Config } from '../../libs/config/config.interface.js';
-import { RestSchema } from '../../libs/config/rest.schema.js';
-import { AuthService } from '../auth/auth-service.interface.js';
-import { LoggedUserRdo } from './rdo/logged-use.rdo.js';
+import { UploadFileMiddleware, ValidateObjectIdMiddleware, ValidateDtoMiddleware } from '../../libs/rest/index.js';
+import { RestSchema, Config } from '../../libs/config/index.js';
+import { AuthService } from '../auth/index.js';
+import { LoggedUserRdo } from './index.js';
 
 
 @injectable()
@@ -58,6 +55,14 @@ export class UserController extends BaseController {
       method: HttpMethod.Get,
       handler: this.checkStatusAuthenticate
     });
+    this.addRoute({
+      path: '/logout',
+      method: HttpMethod.Delete,
+      handler: this.logout,
+      middlewares: [
+        new PrivateRouteMiddleware()
+      ]
+    });
   }
 
   public async create({ body }: CreateUserRequest, res: Response): Promise<void> {
@@ -82,7 +87,7 @@ export class UserController extends BaseController {
       email: user.email,
       token
     });
-    this.ok(res, responseData);
+    this.ok(res, fillDTO(LoggedUserRdo,responseData));
   }
 
   public async uploadAvatar(req: Request, res: Response) {
@@ -98,6 +103,10 @@ export class UserController extends BaseController {
         'UserController'
       );
     }
-    this.ok(res, user);
+    this.ok(res, fillDTO(UserRdo, user));
+  }
+
+  public logout(_req: Request, res: Response){
+    this.noContent(res, {});
   }
 }

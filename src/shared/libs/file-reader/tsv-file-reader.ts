@@ -1,9 +1,9 @@
 import EventEmitter from 'node:events';
 import { createReadStream } from 'node:fs';
-
 import { FileReader } from './index.js';
 import { Offer } from '../../types/index.js';
-import { TypeOffer } from '../../types/offer-type.js';
+import { TypeOffer } from '../../types/index.js';
+import { location } from '../../helpers/index.js';
 export class TSVFileReader extends EventEmitter implements FileReader {
   private CHUNK_SIZE = 16384;
 
@@ -46,12 +46,14 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       isFavorite: this.parseBoolean(isFavorite),
       isPremium: this.parseBoolean(isPremium),
       rating: this.parseStringToNumber(rating),
-      type: TypeOffer[type as 'Apartment' | 'House' | 'Room' | 'Hotel'],
+      type: TypeOffer[type as 'apartment' | 'house' | 'room' | 'hotel'],
       bedrooms: this.parseStringToNumber(bedrooms),
       maxAdults: this.parseStringToNumber(maxAdults),
       price: this.parseStringToNumber(price),
       goods: this.parseGoods(goods),
-      host: this.parseHost(name, email, avatarUser, password, isPro)
+      host: this.parseHost(name, email, avatarUser, password, isPro),
+      location: location[city],
+
     };
   }
 
@@ -67,11 +69,11 @@ export class TSVFileReader extends EventEmitter implements FileReader {
   }
 
   private parseGoods(goods: string): string[] {
-    return goods.split(',').map((good) => (good));
+    return goods.split(';').map((good) => (good));
   }
 
   private parseImages(images: string): string[] {
-    return images.split(',').map((img) => (img));
+    return images.split(';').map((img) => (img));
   }
 
   private parseHost(name: string, email: string, avatarUser: string, password: string, status: string) {

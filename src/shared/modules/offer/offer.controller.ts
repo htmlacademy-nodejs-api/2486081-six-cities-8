@@ -1,18 +1,12 @@
 import { inject, injectable } from 'inversify';
-import { BaseController, HttpError, HttpMethod } from '../../libs/rest/index.js';
+import { BaseController, HttpError, HttpMethod, PrivateRouteMiddleware, DocumentExistsMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Request, Response } from 'express';
 import { fillDTO } from '../../helpers/index.js';
-import { CreareOfferRequest, CreateOfferDto, DetailedOfferRdo, OfferRdo, OfferService, UpdateOfferDto, } from './index.js';
-import { ParamOfferCity, ParamOfferId, RequestQuery } from './types.js';
-import { CommentService } from '../comment/comment-servise.interface.js';
-import { CommentRdo } from '../comment/rdo/comment.rdo.js';
-import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
-import { ValidateDtoMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
-import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
+import { CreareOfferRequest, CreateOfferDto, DetailedOfferRdo, OfferRdo, OfferService, UpdateOfferDto, ParamOfferCity, ParamOfferId, RequestQuery } from './index.js';
+import { CommentRdo, CommentService } from '../comment/index.js';
 import { StatusCodes } from 'http-status-codes';
-
 
 @injectable()
 export class OfferController extends BaseController {
@@ -29,7 +23,10 @@ export class OfferController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [ new ValidateDtoMiddleware(CreateOfferDto)]
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateOfferDto)
+      ]
     });
     this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
     this.addRoute({ path: '/:city/offer', method: HttpMethod.Get, handler: this.premium });
@@ -48,6 +45,7 @@ export class OfferController extends BaseController {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
       ]
@@ -57,6 +55,7 @@ export class OfferController extends BaseController {
       method: HttpMethod.Put,
       handler: this.update,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(UpdateOfferDto),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
@@ -67,6 +66,16 @@ export class OfferController extends BaseController {
       method: HttpMethod.Get,
       handler: this.indexComment,
       middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+      ]
+    });
+    this.addRoute({
+      path: '/favorite/:offerId/',
+      method: HttpMethod.Post,
+      handler: this.favoriteStatus,
+      middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
       ]
@@ -92,11 +101,13 @@ export class OfferController extends BaseController {
   public async delete({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
     const { offerId } = params;
     const offer = await this.offerService.deleteById(offerId);
+    await this.commentService.deleteByOfferId(offerId);
     this.noContent(res, offer);
   }
 
   public async update({ body, params }: Request<ParamOfferId>, res: Response): Promise<void> {
     const { offerId } = params;
+
     const offer = await this.offerService.updateById(offerId, body);
     this.ok(res, fillDTO(DetailedOfferRdo, offer));
   }
@@ -125,5 +136,15 @@ export class OfferController extends BaseController {
     const { offerId } = params;
     const comments = await this.commentService.findByOfferId(offerId);
     this.ok(res, fillDTO(CommentRdo, comments));
+  }
+
+  public async favoriteStatus({ params, query }: Request<ParamOfferId, unknown, unknown, RequestQuery>, res: Response): Promise<void> {
+    if (Number(query.status) === 0) {
+      const offer = await this.offerService.updateById(params.offerId, {isFavorite: false});
+      return this.ok(res, fillDTO(DetailedOfferRdo, offer));
+    }
+
+    const offer = await this.offerService.updateById(params.offerId, {isFavorite: true});
+    this.ok(res, fillDTO(DetailedOfferRdo, offer));
   }
 }

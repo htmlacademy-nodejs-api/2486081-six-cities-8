@@ -1,7 +1,7 @@
 import { IsBoolean, IsDateString, IsEnum, IsInt, IsMongoId, IsOptional, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { UserRdo } from '../../user/index.js';
 import { UpdateOfferValidationMessage } from './update-offer.messages.js';
-import { TypeOffer } from '../../../types/offer-type.js';
+import { TypeOffer } from '../../../types/index.js';
 
 
 export class UpdateOfferDto {

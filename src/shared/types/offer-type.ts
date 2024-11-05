@@ -1,4 +1,4 @@
-import { User } from './user-type.js';
+import { User, Location } from './index.js';
 
 export type Images = {
   img: string;
@@ -14,10 +14,10 @@ export enum Goods {
 }
 
 export enum TypeOffer {
-  Apartment = 'apartment',
-  House = 'house',
-  Room = 'room',
-  Hotel = 'hotel'
+  apartment = 'apartment',
+  house = 'house',
+  room = 'room',
+  hotel = 'hotel'
 }
 
 
@@ -37,4 +37,5 @@ export type Offer = {
   price: number;
   goods: string[] | Goods[];
   host: User;
+  location: Location
 }

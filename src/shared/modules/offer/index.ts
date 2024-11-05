@@ -8,3 +8,4 @@ export { DetailedOfferRdo } from './rdo/detailed-offer.rdo.js';
 export { OfferRdo } from './rdo/offer.rdo.js';
 export { DefaultOfferService } from './default-offer.service.js';
 export { CreareOfferRequest } from './types.js';
+export { ParamOfferCity, ParamOfferId, RequestQuery } from './types.js';

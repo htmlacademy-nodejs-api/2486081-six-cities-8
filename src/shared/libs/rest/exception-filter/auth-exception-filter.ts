@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
-import { ExceptionFilter } from'./exception-filter.interface.js';
-import { Component } from '../../../types/component.enum.js';
-import { Logger } from '../../logger/logger.interface.js';
+import { ExceptionFilter } from'./../index.js';
+import { Component } from '../../../types/index.js';
+import { Logger } from '../../logger/index.js';
 import { Request, Response, NextFunction } from 'express';
-import { BaseUserException } from '../../../modules/auth/helpers/errors/base-user.exception.js';
+import { BaseUserException } from '../../../modules/auth/index.js';
 
 @injectable()
 export class AuthExceptionFilter implements ExceptionFilter {
@@ -15,7 +15,7 @@ export class AuthExceptionFilter implements ExceptionFilter {
 
   public catch(error: Error, _req: Request, res: Response, next: NextFunction): void {
     if (! (error instanceof BaseUserException)) {
-      return next();
+      return next(error);
     }
 
     this.logger.error(`[AuthModule] ${error.message}`, error);

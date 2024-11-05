@@ -1,18 +1,11 @@
-import { getMongoURI } from '../../shared/helpers/datadase.js';
-import { DatabaseClient } from '../../shared/libs/database-client/database-client.interface.js';
-import { MongoDatabaseClient } from '../../shared/libs/database-client/mongo.database-client.js';
-import { TSVFileReader } from '../../shared/libs/file-reader/tsv-file-reader.js';
-import { ConsoleLogger } from '../../shared/libs/logger/console.logger.js';
-import { Logger } from '../../shared/libs/logger/logger.interface.js';
-import { DefaultOfferService } from '../../shared/modules/offer/default-offer.service.js';
-import { OfferService } from '../../shared/modules/offer/offer-servise.interface.js';
-import { OfferModel } from '../../shared/modules/offer/offer.entity.js';
-import { DefaultUserService } from '../../shared/modules/user/default-user.service.js';
-import { UserService } from '../../shared/modules/user/user-service.interface.js';
-import { UserModel } from '../../shared/modules/user/user.entity.js';
-import { Offer } from '../../shared/types/offer-type.js';
-import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from './command.constant.js';
-import { Command } from './command.interface.js';
+import { getMongoURI } from '../../shared/helpers/index.js';
+import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
+import { TSVFileReader } from '../../shared/libs/file-reader/index.js';
+import { Logger, ConsoleLogger} from '../../shared/libs/logger/index.js';
+import { OfferModel, OfferService, DefaultOfferService } from '../../shared/modules/offer/index.js';
+import { UserModel, UserService, DefaultUserService} from '../../shared/modules/user/index.js';
+import { Offer } from '../../shared/types/index.js';
+import { Command, DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from './../index.js';
 
 export class ImportCommand implements Command {
   private userService: UserService;
@@ -52,8 +45,6 @@ export class ImportCommand implements Command {
       postDate: offer.postDate,
       city: offer.city,
       previewImage: offer.previewImage,
-      images: offer.images,
-      isFavorite: offer.isFavorite,
       isPremium: offer.isPremium,
       rating: offer.rating,
       type: offer.type,

@@ -1,7 +1,12 @@
 import { Expose, Type } from 'class-transformer';
 import { UserRdo } from '../../user/index.js';
+import { City } from '../../../types/index.js';
+
 
 export class DetailedOfferRdo {
+  @Expose()
+  public id: string;
+
   @Expose()
   public title: string;
 
@@ -13,6 +18,9 @@ export class DetailedOfferRdo {
 
   @Expose()
   public city: string;
+
+  @Expose()
+  public location: City;
 
   @Expose()
   public previewImage: string;
@@ -48,6 +56,8 @@ export class DetailedOfferRdo {
   @Type(() => UserRdo)
   public host: UserRdo;
 
-  /*@Expose()
-  public comment: number;*/
+  @Expose()
+  public commentCount: number;
+
+
 }

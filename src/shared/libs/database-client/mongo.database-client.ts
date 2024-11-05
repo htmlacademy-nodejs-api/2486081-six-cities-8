@@ -4,7 +4,7 @@ import { inject, injectable } from 'inversify';
 import { DatabaseClient } from './index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../logger/index.js';
-import { Retry } from '../../helpers/const.js';
+import { Retry } from '../../helpers/index.js';
 import { setTimeout } from 'node:timers/promises';
 
 @injectable()

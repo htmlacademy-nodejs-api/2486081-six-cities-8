@@ -1,8 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { OfferService, CreateOfferDto, UpdateOfferDto, OfferEntity } from './index.js';
-import { Component } from '../../types/component.enum.js';
-import { types } from '@typegoose/typegoose';
-import { Logger } from '../../libs/logger/logger.interface.js';
+import { Component } from '../../types/index.js';
+import { DocumentType, types } from '@typegoose/typegoose';
+import { Logger } from '../../libs/logger/index.js';
+import { location } from '../../helpers/index.js';
+import { DEFAULT_OFFER_IMAGES } from '../../helpers/const.js';
 
 
 @injectable()
@@ -14,7 +16,7 @@ export class DefaultOfferService implements OfferService {
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<types.DocumentType<OfferEntity>> {
-    const offer = await this.offerModel.create(dto);
+    const offer = await this.offerModel.create({...dto, location: location[dto.city], images: DEFAULT_OFFER_IMAGES});
     this.logger.info(`New offer created: ${dto.title}`);
 
     return offer;
@@ -54,6 +56,13 @@ export class DefaultOfferService implements OfferService {
 
   public async findByFavoritesOffers(): Promise<types.DocumentType<OfferEntity>[] | null> {
     return this.offerModel.find({ isFavorite: true}, {}, {}).populate(['host']).exec();
+  }
+
+  public async incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null> {
+    return this.offerModel
+      .findByIdAndUpdate(offerId, {'$inc': {
+        commentCount: 1,
+      }}).exec();
   }
 
   public async exists(documentId: string): Promise<boolean> {

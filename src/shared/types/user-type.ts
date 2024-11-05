@@ -1,8 +1,3 @@
-export enum TypeUser {
-  Pro = 'Pro',
-  Usual = 'Usual'
-}
-
 export type User = {
   name: string;
   email: string;
