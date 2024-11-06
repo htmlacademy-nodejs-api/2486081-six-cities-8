@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { AuthService, UserNotFoundException, UserPasswordIncorrectException, TokenPayload, JWT_ALGORITHM, JWT_EXPIRED } from './index.js';
+import { AuthService, UserNotFoundException, UserPasswordIncorrectException, TokenPayload, JWT } from './index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { Config, RestSchema } from '../../libs/config/index.js';
@@ -27,9 +27,9 @@ export class DefaultAuthService implements AuthService {
 
     this.logger.info(`Create token for ${user.email}`);
     return new SignJWT(tokenPayload)
-      .setProtectedHeader({ alg: JWT_ALGORITHM })
+      .setProtectedHeader({ alg: JWT.Algorithm })
       .setIssuedAt()
-      .setExpirationTime(JWT_EXPIRED)
+      .setExpirationTime(JWT.Expired)
       .sign(secretKey);
   }
 
