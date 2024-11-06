@@ -1,8 +1,9 @@
 import EventEmitter from 'node:events';
 import { createReadStream } from 'node:fs';
-
 import { FileReader } from './index.js';
-import { Offer, TypeUser } from '../../types/index.js';
+import { Offer } from '../../types/index.js';
+import { TypeOffer } from '../../types/index.js';
+import { location } from '../../helpers/index.js';
 export class TSVFileReader extends EventEmitter implements FileReader {
   private CHUNK_SIZE = 16384;
 
@@ -32,7 +33,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       email,
       avatarUser,
       password,
-      typeUser,
+      isPro,
     ] = line.split('\t');
 
     return {
@@ -45,12 +46,14 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       isFavorite: this.parseBoolean(isFavorite),
       isPremium: this.parseBoolean(isPremium),
       rating: this.parseStringToNumber(rating),
-      type,
+      type: TypeOffer[type as 'apartment' | 'house' | 'room' | 'hotel'],
       bedrooms: this.parseStringToNumber(bedrooms),
       maxAdults: this.parseStringToNumber(maxAdults),
       price: this.parseStringToNumber(price),
       goods: this.parseGoods(goods),
-      host: this.parseHost(name, email, avatarUser, password, typeUser)
+      host: this.parseHost(name, email, avatarUser, password, isPro),
+      location: location[city],
+
     };
   }
 
@@ -65,16 +68,17 @@ export class TSVFileReader extends EventEmitter implements FileReader {
     return Number.parseInt(itemString, 10);
   }
 
-  private parseGoods(goods: string): {good: string}[] {
-    return goods.split(',').map((good) => ({good}));
+  private parseGoods(goods: string): string[] {
+    return goods.split(';').map((good) => (good));
   }
 
-  private parseImages(images: string): {img: string}[] {
-    return images.split(',').map((img) => ({img}));
+  private parseImages(images: string): string[] {
+    return images.split(';').map((img) => (img));
   }
 
-  private parseHost(name: string, email: string, avatarUser: string, password: string, typeUser: string) {
-    return {name, email, avatarUser, password, typeUser:TypeUser[typeUser as 'Pro' | 'Usual']};
+  private parseHost(name: string, email: string, avatarUser: string, password: string, status: string) {
+    const isPro = status === 'Pro';
+    return {name, email, avatarUser, password, isPro};
   }
 
   public async read(): Promise<void> {
@@ -96,7 +100,11 @@ export class TSVFileReader extends EventEmitter implements FileReader {
         importedRowCouint++;
 
         const parsedOffer = this.parseLineToOffer(completeRow);
-        this.emit('line', parsedOffer);
+
+        await new Promise((resolve) => {
+          this.emit('line', parsedOffer, resolve);
+        });
+
       }
     }
 

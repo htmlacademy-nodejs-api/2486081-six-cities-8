@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { getRandomElement, getRandomItems, getRandomNumber } from '../../helpers/index.js';
 import { MockServerData } from '../../types/index.js';
 import { OfferGenerator } from './index.js';
-import { Attributes, Price, WeekDay } from '../../helpers/const.js';
+import { Attributes, location, Price, WeekDay } from '../../helpers/index.js';
 
 export class TSVOfferGenerator implements OfferGenerator {
   constructor(private readonly mockData: MockServerData) {}
@@ -28,6 +28,7 @@ export class TSVOfferGenerator implements OfferGenerator {
     const password = getRandomElement<string>(this.mockData.password);
     const typeUser = getRandomElement<string>(this.mockData.typeUser);
 
+
     return [
       title, description, postDate,
       city, previewImage, images,
@@ -35,7 +36,7 @@ export class TSVOfferGenerator implements OfferGenerator {
       type, bedrooms, maxAdults,
       price, goods, name,
       email, avatarUser, password,
-      typeUser
+      typeUser, location
     ].join('\t');
   }
 }
