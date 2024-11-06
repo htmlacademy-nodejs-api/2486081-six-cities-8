@@ -3,7 +3,7 @@ POST http://localhost:3000/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "new_user123456@test.com",
+  "email": "new_user@test.com",
   "name": "Admin",
   "isPro": true,
   "password": "super!"
@@ -15,7 +15,7 @@ POST http://localhost:3000/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "new_user123456@test.com",
+  "email": "new_user@test.com",
   "password": "super!"
 }
 ###

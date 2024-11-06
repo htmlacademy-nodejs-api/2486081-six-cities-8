@@ -1,2 +1,5 @@
-export const DEFAULT_DB_PORT = '27017';
-export const DEFAULT_USER_PASSWORD = '123qwe';
+export enum DefaultData {
+ PortDB = '27017',
+ UserPassword = '123qwe'
+}
+

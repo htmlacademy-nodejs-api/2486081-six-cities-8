@@ -6,7 +6,7 @@ import { DatabaseClient } from '../shared/libs/database-client/index.js';
 import express, { Express } from 'express';
 import { Controller, ExceptionFilter, ParseTokenMiddleware } from '../shared/libs/rest/index.js';
 import { getFullServerPath, getMongoURI } from '../shared/helpers/index.js';
-import { STATIC_FILES_ROUTE, STATIC_UPLOAD_ROUTE } from './index.js';
+import { StaticRoute } from './index.js';
 import cors from 'cors';
 
 @injectable()
@@ -57,11 +57,11 @@ export class RestApplication {
 
     this.server.use(express.json());
     this.server.use(
-      STATIC_UPLOAD_ROUTE,
+      StaticRoute.Upload,
       express.static(this.config.get('STATIC_DIRECTORY_PATH'))
     );
     this.server.use(
-      STATIC_FILES_ROUTE,
+      StaticRoute.Static,
       express.static(this.config.get('UPLOAD_DIRECTIRY'))
     );
     this.server.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
