@@ -19,10 +19,10 @@ export interface OfferEntity extends defaultClasses.Base {}
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class OfferEntity extends defaultClasses.TimeStamps {
-  @prop({required: true, minlength: 10, maxlength: 100 })
+  @prop({required: true, minLength: 10, maxLength: 100 })
   public title: string;
 
-  @prop({required: true, minlength: 20, maxlength: 1024 })
+  @prop({required: true, minLength: 20, maxLength: 1024 })
   public description: string;
 
   @prop({required: true})

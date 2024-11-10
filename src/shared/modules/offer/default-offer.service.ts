@@ -12,7 +12,7 @@ export class DefaultOfferService implements OfferService {
 
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
-    @inject(Component.OfferModul) private readonly offerModel: types.ModelType<OfferEntity>
+    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<types.DocumentType<OfferEntity>> {

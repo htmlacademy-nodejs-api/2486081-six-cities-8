@@ -58,10 +58,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
   }
 
   private parseBoolean(itemString: string): boolean {
-    if (itemString === 'true') {
-      return true;
-    }
-    return false;
+    return itemString === 'true';
   }
 
   private parseStringToNumber(itemString: string): number {
@@ -69,11 +66,11 @@ export class TSVFileReader extends EventEmitter implements FileReader {
   }
 
   private parseGoods(goods: string): string[] {
-    return goods.split(';').map((good) => (good));
+    return goods.split(';');
   }
 
   private parseImages(images: string): string[] {
-    return images.split(';').map((img) => (img));
+    return images.split(';');
   }
 
   private parseHost(name: string, email: string, avatarUser: string, password: string, status: string) {
@@ -88,16 +85,16 @@ export class TSVFileReader extends EventEmitter implements FileReader {
     });
 
     let remainingData = '';
-    let nextLinePosititon = -1;
-    let importedRowCouint = 0;
-
+    let nextLinePosition = -1;
+    let importedRowCount = 0;
     for await (const chunk of readStream) {
       remainingData += chunk.toString();
+      nextLinePosition = remainingData.indexOf('\n');
 
-      while((nextLinePosititon = remainingData.indexOf('\n')) >= 0) {
-        const completeRow = remainingData.slice(0, nextLinePosititon + 1);
-        remainingData = remainingData.slice(++nextLinePosititon);
-        importedRowCouint++;
+      while(nextLinePosition >= 0) {
+        const completeRow = remainingData.slice(0, nextLinePosition + 1);
+        remainingData = remainingData.slice(++nextLinePosition);
+        importedRowCount++;
 
         const parsedOffer = this.parseLineToOffer(completeRow);
 
@@ -105,10 +102,11 @@ export class TSVFileReader extends EventEmitter implements FileReader {
           this.emit('line', parsedOffer, resolve);
         });
 
+        nextLinePosition = remainingData.indexOf('\n');
       }
     }
 
-    this.emit('end', importedRowCouint);
+    this.emit('end', importedRowCount);
   }
 }
 

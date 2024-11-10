@@ -1,4 +1,4 @@
-import { MinLength, MaxLength, IsDateString, IsInt, Min, Max, IsEnum, IsBoolean, IsMongoId } from 'class-validator';
+import { MinLength, MaxLength, IsDateString, IsInt, Min, Max, IsEnum, IsBoolean } from 'class-validator';
 import { CreateOfferValidationMessage } from './create-offer.messages.js';
 import { TypeOffer } from '../../../types/index.js';
 
@@ -47,6 +47,5 @@ export class CreateOfferDto {
 
   public goods: string[];
 
-  @IsMongoId({ message: CreateOfferValidationMessage.host.invalidId })
   public host: string;
 }
