@@ -62,7 +62,7 @@ export class RestApplication {
     );
     this.server.use(
       StaticRoute.Static,
-      express.static(this.config.get('UPLOAD_DIRECTIRY'))
+      express.static(this.config.get('UPLOAD_DIRECTORY'))
     );
     this.server.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
     this.server.use(cors());
@@ -77,24 +77,24 @@ export class RestApplication {
   }
 
   public async init() {
-    this.logger.info('Application initiazation');
+    this.logger.info('Application initialization ');
     this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
 
     this.logger.info('Init database...');
     await this.initDb();
     this.logger.info('init database completed');
 
-    this.logger.info('Init app-level midlleware');
+    this.logger.info('Init app-level middleware');
     await this.initMiddleware();
-    this.logger.info('App-level middleware initiazation completed');
+    this.logger.info('App-level middleware initialization  completed');
 
     this.logger.info('Init controllers...');
     await this.initControllers();
-    this.logger.info('Controller initiazation completed');
+    this.logger.info('Controller initialization  completed');
 
     this.logger.info('Init exception filters');
     await this.initExceptionFilter();
-    this.logger.info('Exception filters initialization compleated.');
+    this.logger.info('Exception filters initialization completed.');
 
     this.logger.info('Try to init server...');
     await this.initServer();

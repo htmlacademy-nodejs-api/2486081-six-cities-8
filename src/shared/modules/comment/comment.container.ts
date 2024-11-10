@@ -8,7 +8,7 @@ export function createCommentContainer() {
   const container = new Container();
 
   container.bind<CommentService>(Component.CommentService).to(DefaultCommentService).inSingletonScope();
-  container.bind<types.ModelType<CommentEntity>>(Component.CommentModul).toConstantValue(CommentModel);
+  container.bind<types.ModelType<CommentEntity>>(Component.CommentModel).toConstantValue(CommentModel);
   container.bind<Controller>(Component.CommentController).to(CommentController).inSingletonScope();
 
   return container;

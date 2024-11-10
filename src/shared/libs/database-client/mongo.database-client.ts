@@ -10,17 +10,17 @@ import { setTimeout } from 'node:timers/promises';
 @injectable()
 export class MongoDatabaseClient implements DatabaseClient {
 
-  private isConneted: boolean;
+  private isConnected: boolean;
   private mongoose: typeof Mongoose;
 
   constructor(
     @inject(Component.Logger) private readonly logger: Logger
   ) {
-    this.isConneted = false;
+    this.isConnected = false;
   }
 
   public isConnectedToDatabase() {
-    return this.isConneted;
+    return this.isConnected;
   }
 
   public async connect(uri: string): Promise<void> {
@@ -36,7 +36,7 @@ export class MongoDatabaseClient implements DatabaseClient {
     while (attempt < Retry.Count) {
       try {
         this.mongoose = await Mongoose.connect(uri);
-        this.isConneted = true;
+        this.isConnected = true;
         this.logger.info('Database connection established.');
         return;
       } catch (error) {
@@ -53,7 +53,7 @@ export class MongoDatabaseClient implements DatabaseClient {
     }
 
     await this.mongoose.disconnect?.();
-    this.isConneted = false;
+    this.isConnected = false;
     this.logger.info('Database connection closed');
   }
 }

@@ -9,12 +9,12 @@ import { createErrorObject } from '../../../helpers/index.js';
 
 
 @injectable()
-export class ValodationExceptionFilter implements ExceptionFilter {
+export class ValidationExceptionFilter implements ExceptionFilter {
 
   constructor(
     @inject(Component.Logger) private readonly logger: Logger
   ) {
-    this.logger.info('Register ValodationExceptionFilter');
+    this.logger.info('Register ValidationExceptionFilter');
   }
 
   public catch(error: unknown, _req: Request, res: Response, next: NextFunction): void {
@@ -22,7 +22,7 @@ export class ValodationExceptionFilter implements ExceptionFilter {
       return next(error);
     }
 
-    this.logger.error(`[ValodationException]: ${error.message}`, error);
+    this.logger.error(`[ValidationException]: ${error.message}`, error);
 
     error.details?.forEach(
       (errorField) => this.logger.warn(`[${errorField.property}] - ${errorField.messages}`)

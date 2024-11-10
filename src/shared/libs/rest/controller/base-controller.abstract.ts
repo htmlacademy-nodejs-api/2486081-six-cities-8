@@ -37,8 +37,8 @@ export abstract class BaseController implements Controller {
   }
 
   public send<T>(res: Response, statusCode: number, data: T): void {
-    const modifieData = this.pathTransformer.execute(data as Record<string, unknown>);
-    res.type(this.DEFAULT_CONTENT_TYPE).status(statusCode).json(modifieData);
+    const modifyData = this.pathTransformer.execute(data as Record<string, unknown>);
+    res.type(this.DEFAULT_CONTENT_TYPE).status(statusCode).json(modifyData);
   }
 
   public created<T>(res: Response, data: T): void {

@@ -9,7 +9,7 @@ export class DefaultCommentService implements CommentService {
 
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
-    @inject(Component.CommentModul) private readonly commentModel: types.ModelType<CommentEntity>
+    @inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>
   ) {}
 
   public async create(dto: CreateCommentDto): Promise<types.DocumentType<CommentEntity>> {
@@ -21,10 +21,10 @@ export class DefaultCommentService implements CommentService {
 
   public async findByOfferId(offerId: string, count?: number): Promise<types.DocumentType<CommentEntity>[]> {
     const limit = count ?? 50;
-    const connets = this.commentModel.find({offerId}, {}, { limit }).populate('userId');
+    const connects = this.commentModel.find({offerId}, {}, { limit }).populate('userId');
     this.logger.info(`List of comments for offer id:${offerId}`);
 
-    return connets;
+    return connects;
   }
 
   public async deleteByOfferId(offerId: string): Promise<number | null> {

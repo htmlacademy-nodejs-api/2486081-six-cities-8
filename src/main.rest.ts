@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { RestApplication, createReasApplicationContainer} from './rest/index.js';
+import { RestApplication, createRestApplicationContainer} from './rest/index.js';
 import { Container } from 'inversify';
 import { Component } from './shared/types/index.js';
 import { createUserContainer } from './shared/modules/user/index.js';
@@ -9,7 +9,7 @@ import { createAuthContainer } from './shared/modules/auth/index.js';
 
 async function bootstrap() {
   const appContainer = Container.merge(
-    createReasApplicationContainer(),
+    createRestApplicationContainer(),
     createUserContainer(),
     createOfferContainer(),
     createCommentContainer(),

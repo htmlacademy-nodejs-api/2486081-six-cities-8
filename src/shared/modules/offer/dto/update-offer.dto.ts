@@ -1,4 +1,4 @@
-import { IsBoolean, IsDateString, IsEnum, IsInt, IsMongoId, IsOptional, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { IsBoolean, IsDateString, IsEnum, IsInt, IsOptional, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { UserRdo } from '../../user/index.js';
 import { UpdateOfferValidationMessage } from './update-offer.messages.js';
 import { TypeOffer } from '../../../types/index.js';
@@ -69,6 +69,5 @@ export class UpdateOfferDto {
   public goods?: string[];
 
   @IsOptional()
-  @IsMongoId({ message: UpdateOfferValidationMessage.host.invalidId })
   public host?: UserRdo;
 }

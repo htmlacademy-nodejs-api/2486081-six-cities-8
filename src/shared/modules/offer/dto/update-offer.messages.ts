@@ -10,12 +10,12 @@ export const UpdateOfferValidationMessage = {
   postDate: {
     invalidFormat: 'PostData must be a valid ISO date',
   },
-  // city: string;
+
   previewImage: {
     invalidFormat: 'Image is required',
     maxLength: 'Too long for field image. Maximum length is 256'
   },
-  // public images?: Images[];
+
   isFavorite: {
     invalidFormat: 'isFavorite must be is false or true'
   },
@@ -44,9 +44,5 @@ export const UpdateOfferValidationMessage = {
     invalidFormat: 'price must be an integer',
     min: 'Minimum price is 100',
     max: 'Maximum price is 100 000'
-  },
-  // public goods?: Goods[];
-  host:  {
-    invalidId: 'Host field must be a valid id',
   },
 } as const;

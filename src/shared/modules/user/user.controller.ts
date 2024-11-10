@@ -46,7 +46,7 @@ export class UserController extends BaseController {
       handler: this.uploadAvatar,
       middlewares: [
         new ValidateObjectIdMiddleware('userId'),
-        new UploadFileMiddleware(this.config.get('UPLOAD_DIRECTIRY'), 'avatar')
+        new UploadFileMiddleware(this.config.get('UPLOAD_DIRECTORY'), 'avatar')
 
       ]
     });
@@ -66,9 +66,9 @@ export class UserController extends BaseController {
   }
 
   public async create({ body }: CreateUserRequest, res: Response): Promise<void> {
-    const existUser = await this.userService.findByEmail(body.email);
+    const existedUser = await this.userService.findByEmail(body.email);
 
-    if (existUser) {
+    if (existedUser) {
       throw new HttpError(
         StatusCodes.CONFLICT,
         `A user with the email ${body.email} already exists.`,

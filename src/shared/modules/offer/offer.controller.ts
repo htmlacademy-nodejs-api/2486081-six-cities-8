@@ -4,9 +4,10 @@ import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Request, Response } from 'express';
 import { fillDTO } from '../../helpers/index.js';
-import { CreareOfferRequest, CreateOfferDto, DetailedOfferRdo, OfferRdo, OfferService, UpdateOfferDto, ParamOfferCity, ParamOfferId, RequestQuery } from './index.js';
+import { CreateOfferRequest, CreateOfferDto, DetailedOfferRdo, OfferRdo, OfferService, UpdateOfferDto, ParamOfferCity, ParamOfferId, RequestQuery } from './index.js';
 import { CommentRdo, CommentService } from '../comment/index.js';
 import { StatusCodes } from 'http-status-codes';
+
 
 @injectable()
 export class OfferController extends BaseController {
@@ -82,8 +83,8 @@ export class OfferController extends BaseController {
     });
   }
 
-  public async create({ body }: CreareOfferRequest, res: Response): Promise<void> {
-    const offer = await this.offerService.create(body);
+  public async create({ body, tokenPayload }: CreateOfferRequest, res: Response): Promise<void> {
+    const offer = await this.offerService.create({... body, host: tokenPayload.id});
     this.created(res, fillDTO(OfferRdo, offer));
   }
 
@@ -98,17 +99,37 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(DetailedOfferRdo, offer));
   }
 
-  public async delete({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
+  public async delete({ params, tokenPayload }: Request<ParamOfferId>, res: Response): Promise<void> {
     const { offerId } = params;
-    const offer = await this.offerService.deleteById(offerId);
+    const { id, email } = tokenPayload;
+    const offer = await this.offerService.findById(offerId);
+    const userOfferId = offer?.host.id.toString('hex');
+
+    if (! (id === userOfferId)) {
+      throw new HttpError(
+        StatusCodes.CONFLICT,
+        `The offer ${offer?.id} does not belong to the user ${email}`,
+        'OfferController'
+      );
+    }
+
+    const result = await this.offerService.deleteById(offerId);
     await this.commentService.deleteByOfferId(offerId);
-    this.noContent(res, offer);
+    this.noContent(res, result);
   }
 
-  public async update({ body, params }: Request<ParamOfferId>, res: Response): Promise<void> {
+  public async update({ body, params, tokenPayload }: Request<ParamOfferId>, res: Response): Promise<void> {
     const { offerId } = params;
-
+    const { id, email } = tokenPayload;
     const offer = await this.offerService.updateById(offerId, body);
+
+    if (! (id === offer?.host.id)) {
+      throw new HttpError(
+        StatusCodes.CONFLICT,
+        `The offer ${offer?.id} does not belong to the user ${email}`,
+        'OfferController'
+      );
+    }
     this.ok(res, fillDTO(DetailedOfferRdo, offer));
   }
 

@@ -17,8 +17,8 @@ export function getRandomElement<T>(items: T[]):T {
   return items[getRandomNumber(0, items.length - 1)];
 }
 
-export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObjaect: V) {
-  return plainToInstance(someDto, plainObjaect, { excludeExtraneousValues: true});
+export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
+  return plainToInstance(someDto, plainObject, { excludeExtraneousValues: true});
 }
 
 export function createErrorObject(errorType: ApplicationError, error: string, details: ValidationErrorField[] = []) {
